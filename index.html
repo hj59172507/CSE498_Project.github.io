@@ -1,10 +1,50 @@
 <!DOCTYPE html>
 <html>
-<title>HTML Tutorial</title>
+<title>Data Visualization</title>
 <body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 
-<h1>This is a heading</h1>
-<p>This is a paragraph.</p>
+    <div id="svg-container">
+    <svg id="viz" width="720" height="405"></svg>
+    </div>
+
+<script>
+
+    var width = 720;
+    var height = 405;
+
+</script>
+
+<script>
+var data = 
+[
+    10,
+    5,
+    5,
+    8,
+    9,
+    3,
+    2
+]; 
+
+function updateViz(data)
+{
+var sel = d3.select("#viz")
+.selectAll("rect")
+.data(data);
+sel.enter()
+.append("rect")
+.merge(sel)
+.attr("width",15)
+.attr("height",function(d){return 10*d; })
+.attr("x",function(d,i){return i*20; })
+.attr("y",function(d){return (height/2.0)-(5.0*d); })
+.attr("tokenid",function(d,i){return d*i*64; })
+.attr("fill", "steelblue ");
+sel.exit().remove();
+}
+updateViz(data)
+</script>
 
 </body>
 </html>
