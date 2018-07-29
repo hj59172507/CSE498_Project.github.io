@@ -1,49 +1,121 @@
 <!DOCTYPE html>
 <html>
 <title>Data Visualization</title>
+
+<style> /* set the CSS */
+#viz rect{fill: steelblue;}
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+#tooltip{
+	opacity: 0;
+	position: absolute;
+	text-align: center;
+	width: 60px; 
+	height: 30px;
+	background: white;
+	border: 1px;
+}
+
+</style>
+
 <body>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 
-    <div id="svg-container">
-    <svg id="viz" width="720" height="405"></svg>
-    </div>
+    <svg id="viz"></svg>
+    <div id = "tooltip"></div>
 
 <script>
 
-    var width = 720;
-    var height = 405;
+var margin = {top: 20, right: 50, bottom: 50, left: 50},
+    width = 1060 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
-</script>
+var acc_count_hour = [395,411,416,333,366,479,802,1145,1095,886,716,860,963,859,1231,1395,1525,1708,1283,787,648,555,460,533]; 
+var acc_count_hour_with_injury = [184,178,156,145,132,280,419,590,649,577,430,543,602,617,773,877,904,1035,718,457,377,402,318,235]; 
+var hour = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
 
-<script>
-var data = 
-[
-    10,
-    5,
-    5,
-    8,
-    9,
-    3,
-    2
-]; 
+var x = d3.scaleLinear().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
 
-function updateViz(data)
+var line = d3.line()
+    .x(function(d, i) { return x(i); }) 
+    .y(function(d) { return y(d); })
+    .curve(d3.curveMonotoneX)
+
+function firstScene()
 {
-var sel = d3.select("#viz")
-.selectAll("rect")
-.data(data);
-sel.enter()
-.append("rect")
-.merge(sel)
-.attr("width",15)
-.attr("height",function(d){return 10*d; })
-.attr("x",function(d,i){return i*20; })
-.attr("y",function(d){return (height/2.0)-(5.0*d); })
-.attr("tokenid",function(d,i){return d*i*64; })
-.attr("fill", "steelblue ");
-sel.exit().remove();
+	var sel = d3.select("#viz")
+	.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+	.append("g")
+	.attr("transform",
+	  "translate(" + margin.left + "," + margin.top + ")");
+
+	x.domain(d3.extent(hour, function(d) { return d; }));
+	y.domain([0, d3.max(acc_count_hour, function(d) { return d; })]);
+
+
+	sel.append("g")
+	.attr("transform", "translate(0," + height + ")")
+	.call(d3.axisBottom(x));
+
+	sel.append("g")
+	.call(d3.axisLeft(y));
+
+	sel.append("path")
+	.datum(acc_count_hour)
+	.attr("class", "line")
+	.attr("d", line);
+
+
+	sel.selectAll("rect")
+	.data(acc_count_hour)
+	.enter()
+	.append("rect")
+	.attr("width", 30)
+	.attr("height", function(d,i){return height - y(d)})
+	.attr("x", function (d, i){return x(i) }) 
+	.attr("y", function(d){return y(d)})
+		.on("mouseover", function(d,i){
+		tooltip.style.opacity= 1;
+		tooltip.style.left = d3.event.pageX + "px";
+		tooltip.style.top = d3.event.pageY + "px";
+		tooltip.innerHTML = d;
+	})
+	.on("mouseout", function(){ tooltip.style.opacity =  0;});
+
+
+//title 
+  sel.append("text")             
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           0 + ")")
+      .style("text-anchor", "middle")
+      .text("Accident count distribution in 24 hour interval");
+
+//x-axis label
+  sel.append("text")             
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           (height + margin.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text("Hour");
+//y-axis label
+  sel.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Accident count");
+
 }
-updateViz(data)
+firstScene()
+
 </script>
 
 </body>
