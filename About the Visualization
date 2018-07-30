@@ -1,0 +1,25 @@
+The charts designed to provide an interactive way for viwer to process vehicle collisions reported by state police of Maryland in 2012, 
+specifcally, it is designed to answer general question like how accident is distributed over time and injury ratio. <br/>
+
+1. Hybrid structure : Interactive Slide Show, where user can go forward and backward like a slideshow. <br/>
+It is also interactive as each graph provide tooltip for user to interactive with.<br/>
+
+2. There are three scene in this visualization, each more detail than previous one. I follow a consistance annotation, and color theme. <br/>
+First scenes is line graph, I pick them because both axes are quantitative and line graph are best because its hevay hint of position. <br/>
+The second graph I wish to enhance the contrast between accident with injury and without, hence I used a side-by-side bar graph.<br/>
+I also purposely choose blue and orange for the bar to highlight the difference as they are opposite on color wheel.<br/>
+Legend is also included in top left corner. <br/>
+Last scenes is also a line graph, same as first one that line graph provides a simple yet effective mean convey information by showing visually appealing highs and lows.<br/>
+Prev button and Next Button will automatically turn grey to hint to user that they have reach the first or the last page respectively.<br/>
+
+3. There are annotations in all slides, which serve to point out important fact about the graph.<br/>
+In each scene, annotations are there to guide user to see important data as well as provide possible explaination.<br/>
+
+4. The first parameter is the currentScene variable which keep the state viwer currently in.
+Another parameter is user mouse location, which will be use to display detail data on demand.<br/>
+
+5. In this visualization, trigger are start off by user interaction. When user hover over data in each scene, triggers will 
+go off to retrieve and show detail data base on position of mouse. The user will be hint that trigger is available because I put a circle
+around each data point to draw user attention as well as increase area of trigger.<br/>
+In addition, when user click on buttons to move forward or backward in slideshow, another trigger will transition to other scene 
+base on the current scene parameter.<br/>
